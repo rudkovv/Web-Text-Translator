@@ -19,8 +19,12 @@ import java.util.List;
 @RequestMapping("/api/translator")
 public class TranslateController {
 	
-	@Autowired
 	private TranslateService service;
+	
+	@Autowired
+    public TranslateController(TranslateService service) {
+        this.service = service;
+    }
 	
 	@GetMapping("/allWords")
 	public List<TranslateWord> findAllWords(){

@@ -12,8 +12,12 @@ import com.translate.webtranslator.service.TranslateService;
 @Service
 public class InMemoryTranslateServiceImpl implements TranslateService {
 
-	@Autowired
 	private InMemoryTranslateDAO repository;
+	
+	@Autowired
+    public InMemoryTranslateServiceImpl(InMemoryTranslateDAO repository) {
+        this.repository = repository;
+    }
 	
 	@Override
 	public List<TranslateWord> findAllWords(){
