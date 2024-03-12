@@ -28,10 +28,7 @@ public class Text {
 	@OneToMany(mappedBy = "text",  fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
 	private List<Translation> translations;
-	
-	public Text(){
 
-	}
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH},
     	    fetch = FetchType.LAZY)
     @JsonIgnoreProperties("texts")
