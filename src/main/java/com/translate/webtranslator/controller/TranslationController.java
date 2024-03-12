@@ -31,8 +31,8 @@ public class TranslationController {
     }
 
     @PostMapping("/create")
-    public Translation saveTranslation(@RequestBody Translation Translation){
-        return translationService.saveTranslation(Translation);
+    public Translation saveTranslation(@RequestBody Translation translation){
+        return translationService.saveTranslation(translation);
     }
 
     @DeleteMapping("/delete/{id}")

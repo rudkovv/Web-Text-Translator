@@ -49,8 +49,8 @@ public class TextService {
     	for (Translation translation: translationsList) {
     		translation.setText(null);
     	}
-    	List<Language> LanguagesList = text.getLanguages();
-    	for (Language language: LanguagesList) {
+    	List<Language> languagesList = text.getLanguages();
+    	for (Language language: languagesList) {
     		language.setTexts(null);
     	}
         textRepository.deleteById(textId);

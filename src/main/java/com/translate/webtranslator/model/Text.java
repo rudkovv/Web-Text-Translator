@@ -22,7 +22,7 @@ public class Text {
 	@GeneratedValue
 	private Long id;
 
-	private String text;
+	private String textToTranslate;
 	
 	@JsonIgnoreProperties("text")
 	@OneToMany(mappedBy = "text",  fetch = FetchType.LAZY,
@@ -51,11 +51,11 @@ public class Text {
     }
 
     public String getText() {
-        return text;
+        return textToTranslate;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.textToTranslate = text;
     }
 
     public List<Translation> getTranslations() {
