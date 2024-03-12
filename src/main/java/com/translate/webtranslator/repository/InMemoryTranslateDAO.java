@@ -6,32 +6,32 @@ import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Repository;
 
-import com.translate.webtranslator.model.TranslateWord;
+import com.translate.webtranslator.model.Text;
 
 @Repository
 public class InMemoryTranslateDAO {
 	
-	private final List<TranslateWord> listOfWords = new ArrayList<>();
-	public List<TranslateWord> findAllWords(){
+	private final List<Text> listOfWords = new ArrayList<>();
+	public List<Text> findAllWords(){
 		return listOfWords;
 	}
 	
-	public TranslateWord saveWordInDictionary(TranslateWord word) {
+	public Text saveWordInDictionary(Text word) {
 		listOfWords.add(word);
 		return word;
 	}
 	
-	public TranslateWord findByWordToTranslate(String wordToTranslate) {
+	public Text findByWordToTranslate(String wordToTranslate) {
 		return listOfWords.stream()
-				.filter(element->element.getWordToTranslate().equals(wordToTranslate))
+				.filter(element->element.getText().equals(wordToTranslate))
 				.findFirst()
 				.orElse(null);
 	}
 	
-	public TranslateWord updateDictionary(TranslateWord word) {
+	public Text updateDictionary(Text word) {
 		var wordIndex = IntStream.range(0, listOfWords.size())
-				.filter(index->listOfWords.get(index).getWordToTranslate().
-						equals(word.getWordToTranslate()))
+				.filter(index->listOfWords.get(index).getText().
+						equals(word.getText()))
 				.findFirst()
 				.orElse(-1);
 		if (wordIndex > -1) {
