@@ -57,10 +57,6 @@ public class LanguageService {
     	    text.getLanguages().add(language);
     	    textRepository.save(text);
     	}
-        else if (!text.getLanguages().contains(language)){
-            text.getLanguages().add(language);
-                textRepository.save(text);
-        }
         return languageRepository.findById(languageId).orElse(null);
     }
     public Language delTextInTextList(Long languageId, Long textId) {
