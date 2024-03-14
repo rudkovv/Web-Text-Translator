@@ -8,8 +8,7 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.List;		
 
 @Service
 public class LanguageService {
@@ -25,6 +24,14 @@ public class LanguageService {
 
     public List<Language> getAllLanguages() {
         return languageRepository.findAll();
+    }
+    
+    public Language getLanguageById(Long languageId) {
+    	return languageRepository.findById(languageId).orElse(null);
+    }
+    
+    public Language getLanguageByLanguage(String language) {
+    	return languageRepository.findByName(language).orElse(null);
     }
 
     public Language saveLanguage(Language language) {
@@ -46,12 +53,10 @@ public class LanguageService {
     						orElseThrow(() -> new IllegalStateException("language with id: " + languageId + "doesn't exist"));
     	Text text = textRepository.findById(textId).
     						orElseThrow(() -> new IllegalStateException("text with id: " + textId + "doesnt exist"));
-        if (language.getTexts().isEmpty()){
-            List<Language> languageList = new ArrayList<>();
-            languageList.add(language);
-            text.setLanguages(languageList);
-            textRepository.save(text);
-        }
+    	if (!text.getLanguages().contains(language)){
+    	    text.getLanguages().add(language);
+    	    textRepository.save(text);
+    	}
         else if (!text.getLanguages().contains(language)){
             text.getLanguages().add(language);
                 textRepository.save(text);

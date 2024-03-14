@@ -24,6 +24,15 @@ public class LanguageController {
         return languageService.getAllLanguages();
     }
 
+    @GetMapping("/find/byId/{id}")
+    public Language getTextById(@PathVariable Long id){
+        return languageService.getLanguageById(id);
+    }
+    @GetMapping("/find/byLanguage/{language}")
+    public Language getTextByText(@PathVariable String language){
+        return languageService.getLanguageByLanguage(language);
+    }
+    
     @PostMapping("/create")
     public Language addLanguage(@RequestBody Language newLanguage){
         return languageService.saveLanguage(newLanguage);

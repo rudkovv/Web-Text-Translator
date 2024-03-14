@@ -1,7 +1,6 @@
 package com.translate.webtranslator.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,12 @@ public class TranslationService {
         return translationRepository.save(translation);
     }
 
-    public Optional<Translation> findById(Long translationid) {
-        return translationRepository.findById(translationid);
+    public Translation getById(Long translationid) {
+        return translationRepository.findById(translationid).orElse(null);
     }
+    
+    public Translation getTranslationByTranslation(String translation) {
+        return translationRepository.findByTranslatedText(translation).orElse(null);
+    }
+
 }

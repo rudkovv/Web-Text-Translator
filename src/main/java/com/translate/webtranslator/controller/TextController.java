@@ -23,9 +23,13 @@ public class TextController {
     public List<Text> getAllTexts(){
         return textService.getAllTexts();
     }
-    @GetMapping("/{id}")
+    @GetMapping("/find/byId/{id}")
     public Text getTextById(@PathVariable Long id){
         return textService.getTextById(id);
+    }
+    @GetMapping("/find/byText/{text}")
+    public Text getTextByText(@PathVariable String text){
+        return textService.getTextByText(text);
     }
 
     @PostMapping("/create")
@@ -33,7 +37,7 @@ public class TextController {
         return textService.saveText(text);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/byId/{id}")
     public String deleteText(@PathVariable Long id){
         return textService.deleteText(id);
     }

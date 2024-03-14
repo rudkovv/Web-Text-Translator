@@ -27,6 +27,10 @@ public class TextService {
     public Text getTextById(Long textId) {
         return textRepository.findById(textId).orElse(null);
     }
+    
+    public Text getTextByText(String text) {
+        return textRepository.findByTextToTranslate(text).orElse(null);
+    }
 
     public String saveText(Text text) {
         textRepository.save(text);

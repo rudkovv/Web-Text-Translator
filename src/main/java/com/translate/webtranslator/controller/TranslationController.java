@@ -1,7 +1,6 @@
 package com.translate.webtranslator.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +24,13 @@ public class TranslationController {
         return translationService.getAllTranslations();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Translation> findById(@PathVariable String id){
-        return translationService.findById((long) Integer.parseInt(id));
+    @GetMapping("/find/byId/{id}")
+    public Translation getTextById(@PathVariable Long id){
+        return translationService.getById(id);
+    }
+    @GetMapping("/find/byTranslation/{translation}")
+    public Translation getTextByText(@PathVariable String translation){
+        return translationService.getTranslationByTranslation(translation);
     }
 
     @PostMapping("/create")
