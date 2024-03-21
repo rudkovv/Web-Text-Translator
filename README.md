@@ -79,7 +79,7 @@ Web приложение представляет собой переводчи�
     }
 ]
 
-##Ссылка на SonarCloud проекта
+## Ссылка на SonarCloud проекта
 
 https://sonarcloud.io/project/overview?id=rudkovv_Web-Text-Translator
 
