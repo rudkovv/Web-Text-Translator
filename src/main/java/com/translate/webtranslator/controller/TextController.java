@@ -1,6 +1,7 @@
 package com.translate.webtranslator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.translate.webtranslator.model.Text;
@@ -32,6 +33,17 @@ public class TextController {
         return textService.getTextByText(text);
     }
 
+    @GetMapping("/find/byLanguage/sort/{language}")
+    public ResponseEntity<List<String>> getTextsSortedByLanguage(@PathVariable("language") String language) {
+        List<String> texts = textService.findTextsSortedByLanguage(language);
+        return ResponseEntity.ok(texts);
+    }
+    @GetMapping("/find/byLanguage/{language}")
+    public ResponseEntity<List<String>> getTextsByLanguage(@PathVariable("language") String language) {
+        List<String> texts = textService.findTextsByLanguage(language);
+        return ResponseEntity.ok(texts);
+    }
+    
     @PostMapping("/create")
     public String saveText(@RequestBody Text text){
         return textService.saveText(text);

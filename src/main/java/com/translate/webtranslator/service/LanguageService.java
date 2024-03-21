@@ -8,6 +8,9 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 
+import cache.CacheKey;
+import cache.InMemoryCache;
+
 import java.util.List;		
 
 @Service
@@ -15,11 +18,13 @@ public class LanguageService {
 
     private LanguageRepository languageRepository;
     private TextRepository textRepository;
+    private InMemoryCache languageCache;
 
     @Autowired
     public LanguageService(LanguageRepository languageRepository,TextRepository textRepository) {
         this.languageRepository = languageRepository;
         this.textRepository = textRepository;
+        this.languageCache = new InMemoryCache();
     }
 
     public List<Language> getAllLanguages() {
@@ -27,15 +32,33 @@ public class LanguageService {
     }
     
     public Language getLanguageById(Long languageId) {
-    	return languageRepository.findById(languageId).orElse(null);
+        Language cachedLanguage = (Language) languageCache.get(new CacheKey(languageId));
+        if (cachedLanguage != null) {
+            return cachedLanguage;
+        }
+        Language language = languageRepository.findById(languageId).orElse(null);
+        if (language != null) {
+        	languageCache.put(new CacheKey(languageId), language);
+        }
+        return language;
     }
     
     public Language getLanguageByLanguage(String language) {
-    	return languageRepository.findByName(language).orElse(null);
+        Language cachedLanguage = (Language) languageCache.get(new CacheKey(language));
+        if (cachedLanguage != null) {
+            return cachedLanguage;
+        }
+        Language findLanguage = languageRepository.findByName(language).orElse(null);
+        if (findLanguage != null) {
+        	languageCache.put(new CacheKey(language), findLanguage);
+        }
+        return findLanguage;
     }
 
     public Language saveLanguage(Language language) {
-        return languageRepository.save(language);
+    	Language savedLanguage = languageRepository.save(language);
+    	languageCache.put(new CacheKey(savedLanguage.getName()), savedLanguage);
+        return savedLanguage;
     }
     
     public String deleteLanguage(Long languageId) {
@@ -46,6 +69,7 @@ public class LanguageService {
     		textRepository.save(text);
     	}
         languageRepository.deleteById(languageId);
+        languageCache.remove(new CacheKey(language.getName()));
         return "succes";
     }
     public Language addTextInTextList(Long languageId, Long textId) {
@@ -57,8 +81,10 @@ public class LanguageService {
     	    text.getLanguages().add(language);
     	    textRepository.save(text);
     	}
-        return languageRepository.findById(languageId).orElse(null);
+    	languageCache.put(new CacheKey(language.getName()), language);
+        return language;
     }
+    
     public Language delTextInTextList(Long languageId, Long textId) {
         Text text = textRepository.findById(textId)
         		.orElseThrow(() -> new IllegalStateException("text doesnt exist"));
@@ -67,6 +93,7 @@ public class LanguageService {
         if (text.getLanguages().remove(language)) {
             textRepository.save(text);
         }
+        languageCache.put(new CacheKey(language.getName()), language);
         return languageRepository.findById(languageId).orElse(null);
     }  
 }

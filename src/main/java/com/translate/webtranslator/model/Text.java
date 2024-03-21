@@ -8,6 +8,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -19,14 +20,14 @@ import jakarta.persistence.FetchType;
 public class Text {
 	@Id
 	@Column(unique = true)
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String textToTranslate;
 	
 	@JsonIgnoreProperties("text")
 	@OneToMany(mappedBy = "text",  fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
 	private List<Translation> translations;
 
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH},
