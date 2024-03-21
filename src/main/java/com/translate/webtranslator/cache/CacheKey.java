@@ -1,4 +1,4 @@
-package cache;
+package com.translate.webtranslator.cache;
 
 import java.util.Objects;
 

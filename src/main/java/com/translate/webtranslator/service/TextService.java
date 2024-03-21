@@ -3,13 +3,12 @@ package com.translate.webtranslator.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.translate.webtranslator.cache.CacheKey;
+import com.translate.webtranslator.cache.InMemoryCache;
 import com.translate.webtranslator.model.Language;
 import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.TextRepository;
-
-import cache.InMemoryCache;
-import cache.CacheKey;
 
 import java.util.List;
 

@@ -5,13 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.translate.webtranslator.cache.CacheKey;
+import com.translate.webtranslator.cache.InMemoryCache;
 import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.TextRepository;
 import com.translate.webtranslator.repository.TranslationRepository;
-
-import cache.CacheKey;
-import cache.InMemoryCache;
 
 
 @Service
