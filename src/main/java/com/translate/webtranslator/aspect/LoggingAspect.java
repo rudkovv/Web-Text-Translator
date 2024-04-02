@@ -1,6 +1,5 @@
 package com.translate.webtranslator.aspect;
 
-import java.util.Arrays;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -42,7 +41,6 @@ public class LoggingAspect {
      */
     @Before(value = "forAspectAnnotation()")
     public void logBefore(final JoinPoint joinPoint) {
-        Object[] args = joinPoint.getArgs();
         String methodName = joinPoint.toString() + " "
                 + joinPoint.getSignature().getName();
         logger.info(">> {}() - starting", methodName);
