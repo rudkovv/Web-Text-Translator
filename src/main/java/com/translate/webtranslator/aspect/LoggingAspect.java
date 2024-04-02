@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final String DIRECTION = "<< {}() - {}";
     
     /**
      * Pointcut to match all methods in the com.translate.webtranslator.exception package.
@@ -44,7 +45,7 @@ public class LoggingAspect {
         Object[] args = joinPoint.getArgs();
         String methodName = joinPoint.toString() + " "
                 + joinPoint.getSignature().getName();
-        logger.info(">> {}() - {}", methodName, Arrays.toString(args));
+        logger.info(">> {}() - starting", methodName);
     }
 
     /**
@@ -57,7 +58,7 @@ public class LoggingAspect {
     @AfterReturning(value = "forAspectAnnotation()", returning = "result")
     public void logAfter(final JoinPoint joinPoint, final Object result) {
         String methodName = joinPoint.toString();
-        logger.info("<< {}() - {}", methodName, result);
+        logger.info(DIRECTION, methodName, result);
     }
     
     /**
@@ -70,7 +71,7 @@ public class LoggingAspect {
     @AfterReturning(value = "allExceptionMethods()", returning = "result")
     public void logExceptionAfter(final JoinPoint joinPoint, final Object result) {
         String methodName = joinPoint.toString();
-        logger.error("<< {}() - {}", methodName, result);
+        logger.error(DIRECTION, methodName, result);
     }
 
     /**
@@ -83,6 +84,6 @@ public class LoggingAspect {
     @AfterThrowing(pointcut = "forAspectAnnotation()", throwing = "exception")
     public void logException(final JoinPoint joinPoint, final Throwable exception) {
         String methodName = joinPoint.toString();
-        logger.error("<< {}() - {}", methodName, exception.getMessage());
+        logger.error(DIRECTION, methodName, exception.getMessage());
     }
 }
