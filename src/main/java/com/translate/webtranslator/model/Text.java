@@ -1,21 +1,25 @@
 package com.translate.webtranslator.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
+import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 
+/**
+ * The Text class represents a text in the Web-Text-Translator application.
+ * It contains information about the text's ID, the text to translate, a list of translations,
+ * and a list of languages associated with the text.
+ */
 @Entity
 public class Text {
 	@Id
@@ -23,6 +27,7 @@ public class Text {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotBlank
 	private String textToTranslate;
 	
 	@JsonIgnoreProperties("text")
@@ -30,7 +35,7 @@ public class Text {
             cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
 	private List<Translation> translations;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.REFRESH},
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},
     	    fetch = FetchType.LAZY)
     @JsonIgnoreProperties("texts")
     @JoinTable(
@@ -39,6 +44,7 @@ public class Text {
         inverseJoinColumns = @JoinColumn(name = "languageId")
     )
     private List<Language> languages;
+    
     @JsonIgnoreProperties("languages")
     public Long getId() {
         return id;

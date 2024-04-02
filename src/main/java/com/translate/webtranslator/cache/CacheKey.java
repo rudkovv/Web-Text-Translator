@@ -2,8 +2,11 @@ package com.translate.webtranslator.cache;
 
 import java.util.Objects;
 
+/**
+ * The CacheKey class represents a key used for caching purposes.
+ * It encapsulates the actual key object.
+ */
 public class CacheKey {
-	
     private final Object key;
 
     public CacheKey(Object key) {

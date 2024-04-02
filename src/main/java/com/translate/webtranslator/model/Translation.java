@@ -1,7 +1,6 @@
 package com.translate.webtranslator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 
+/**
+ * The Translation class represents a translation in the Web-Text-Translator application.
+ * It contains information about the translation's ID, the translated text, and the associated text.
+ */
 @Entity
 public class Translation {
 	@Id
@@ -17,6 +21,7 @@ public class Translation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+	@NotBlank
     private String translatedText;
 
     @ManyToOne
