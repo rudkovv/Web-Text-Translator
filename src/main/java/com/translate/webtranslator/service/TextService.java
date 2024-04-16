@@ -7,7 +7,6 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +27,9 @@ public class TextService {
         this.textCache = new InMemoryCache();
     }
 
-    public String getAllTexts() {
+    public List<Text> getAllTexts() {
     	List<Text> texts = textRepository.findAll();
-    	return texts.stream()
-                 .map(Text::toString)
-                 .collect(Collectors.joining("\n"));
+    	return texts;
     }
 
     /**

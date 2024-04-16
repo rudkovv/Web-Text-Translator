@@ -7,7 +7,6 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +32,9 @@ public class LanguageService {
         this.languageCache = new InMemoryCache();
     }
 
-    public String getAllLanguages() {
+    public List<Language> getAllLanguages() {
     	List<Language> languages = languageRepository.findAll();
-    	return languages.stream()
-                .map(Language::toString)
-                .collect(Collectors.joining("\n"));
+    	return languages;
     }
     
     /**

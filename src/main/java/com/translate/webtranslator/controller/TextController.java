@@ -33,7 +33,7 @@ public class TextController {
     @AspectAnnotation
     @Operation(summary = "Get all the text",
                description = "Allows you to view all the texts in the database")
-    public String getAllTexts() {
+    public List<Text> getAllTexts() {
         return textService.getAllTexts();
     }
     

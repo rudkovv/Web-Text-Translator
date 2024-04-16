@@ -32,7 +32,7 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Get all translations",
                description = "Allows you to view all translations from the database")
-    public String getAllTranslations() {
+    public List<Translation> getAllTranslations() {
         return translationService.getAllTranslations();
     }
 

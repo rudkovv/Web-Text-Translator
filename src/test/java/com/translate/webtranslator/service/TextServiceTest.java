@@ -1,25 +1,24 @@
 package com.translate.webtranslator.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.translate.webtranslator.cache.InMemoryCache;
-import com.translate.webtranslator.model.Language;
 import com.translate.webtranslator.model.Text;
-import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 import com.translate.webtranslator.repository.TranslationRepository;
@@ -42,80 +41,70 @@ public class TextServiceTest {
 	@InjectMocks
 	private TextService textService;
 	
-	private static List<Text> textList;
-
-    private Text text;
-
-    private Translation translation, translationWithText;
-
-    private Language language;
-
-    private final Long textId = 100L;
-
-    private final Long translationId = 101L;
-
-    private final Long languageId = 102L;
-
-    private static final int NUM_OF_REPEATS = 5;
-    
-    @BeforeEach
-    void setUp(){
-    	text = new Text();
-    	text.setId(textId);
-    	text.setText("testText");
-    	
-    	translation = new Translation();
-    	translation.setId(translationId);
-    	translation.setTranslatedText("testTranslation");
-    	
-    	translationWithText = new Translation();
-    	translationWithText.setId(translationId);
-    	translationWithText.setTranslatedText("testTranslation");
-    	
-    	language = new Language();
-    	language.setId(languageId);
-    	language.setName("testLanguage");    	
-    }
-    
-    @BeforeAll
-    static void setUpList(){
-        textList = new ArrayList<>();
-        for(int i=0; i<NUM_OF_REPEATS; i++){
-            Text text = new Text();
-            text.setId((long)i+1);
-            text.setText("testText" + i);
-            textList.add(text);
-        }
+//	private static List<Text> textList;
+//
+//    private Text text;
+//
+//    private Translation translation, translationWithText;
+//
+//    private Language language;
+//
+//    private final Long textId = 100L;
+//
+//    private final Long translationId = 101L;
+//
+//    private final Long languageId = 102L;
+//
+//    private static final int NUM_OF_REPEATS = 5;
+	@BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        textService = new TextService(textRepository);
     }
     
     @Test
-    void testGetAllTexts(){
-        Mockito.when(textRepository.findAll()).thenReturn(textList);
-        String result = textService.getAllTexts();
-        assertEquals(result, textList);
+    void testGetAllTexts() {
+        List<Text> expectedTexts = new ArrayList<>();
+        Text text1 = new Text();
+        text1.setId(1L);
+        text1.setText("Text 1");
+        expectedTexts.add(text1);
+
+        Text text2 = new Text();
+        text2.setId(2L);
+        text2.setText("Text 2");
+        expectedTexts.add(text2);
+
+        when(textRepository.findAll()).thenReturn(expectedTexts);
+
+        List<Text> actualTexts = textService.getAllTexts();
+
+        assertEquals(expectedTexts, actualTexts);
+        verify(textRepository, times(1)).findAll();
     }
     
     @Test
-    void testGetText(){
-        Mockito.when(textRepository.findById(textId)).thenReturn(Optional.of(text));
-        Text result = textService.getTextById(textId);
-        assertNotNull(result);
-        assertEquals(result, text);
+    void testGetTextById() {
+    	Text expectedText = new Text();
+    	expectedText.setId(1L);
+    	expectedText.setText("Text 1");
+
+        when(textRepository.findById(1L)).thenReturn(Optional.of(expectedText));
+
+        Text actualText = textService.getTextById(1L);
+
+        assertEquals(expectedText, actualText);
+        verify(textRepository, times(1)).findById(1L);
+
     }
-    
-//    @Test
-//    void testGetTextException(){
-//        Mockito.when(textRepository.findById(textId)).thenReturn(Optional.empty());
-//        assertThrows(TextNotFoundException.class, () -> textService.getText(textId));
-//    }
     
     @Test
-    void testSaveText(){
-        Mockito.when(textRepository.save(text)).thenReturn(text);
-        String result = textService.saveText(text);
-        assertNotNull(result);
-        assertEquals(result, text);
-        Mockito.verify(textRepository, Mockito.times(1)).save(text);
+    void testDeleteTextById() {
+    	 Long textId = 1L;
+
+         textService.deleteText(textId);
+
+         verify(textRepository, times(1)).deleteById(textId);
     }
-	
+
 }

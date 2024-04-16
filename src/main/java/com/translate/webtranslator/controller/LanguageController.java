@@ -38,7 +38,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Get all the languages",
                description = "Allows you to view all languages in the database")
-    public String getAllLanguages() {
+    public List<Language> getAllLanguages() {
         return languageService.getAllLanguages();
     }
 
