@@ -1,4 +1,4 @@
-package com.translate.webtranslator.service
+package com.translate.webtranslator.service;
 
 import com.translate.webtranslator.model.Language;
 import com.translate.webtranslator.model.Text;
