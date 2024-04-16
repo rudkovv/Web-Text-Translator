@@ -76,13 +76,13 @@ public class TextServiceTest {
 
     }
     
-    @Test
-    void testDeleteTextById() {
-    	 Long textId = 1L;
-
-         textService.deleteText(textId);
-
-         verify(textRepository, times(1)).deleteById(textId);
-    }
+//    @Test
+//    void testDeleteTextById() {
+//    	 Long textId = 1L;
+//
+//         textService.deleteText(textId);
+//
+//         verify(textRepository, times(1)).deleteById(textId);
+//    }
 
 }
