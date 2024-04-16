@@ -7,6 +7,8 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +33,11 @@ public class LanguageService {
         this.languageCache = new InMemoryCache();
     }
 
-    public List<Language> getAllLanguages() {
-        return languageRepository.findAll();
+    public String getAllLanguages() {
+    	List<Language> languages = languageRepository.findAll();
+    	return languages.stream()
+                .map(Language::toString)
+                .collect(Collectors.joining("\n"));
     }
     
     /**
@@ -80,12 +85,11 @@ public class LanguageService {
      * @param language The language to save.
      * @return The saved language.
      */
-    public Language saveLanguage(Language language) {
-    	Language savedLanguage = languageRepository.save(language);
-    	languageCache.put(new CacheKey(savedLanguage.getName()), savedLanguage);
-        return savedLanguage;
+    public String saveLanguage(Language language) {
+    	languageRepository.save(language);
+    	languageCache.put(new CacheKey(language.getId()), language);
+        return language.getName() + " successfully save";
     }
-    
     /**
      * Deletes a language by its ID.
      * Removes the language from the cache.
@@ -147,5 +151,15 @@ public class LanguageService {
         }
         languageCache.put(new CacheKey(language.getName()), language);
         return languageRepository.findById(languageId).orElse(null);
-    }  
+    }
+    
+    public List<String> bulkSaveLanguage(final List<Language> languages) {
+    	languageRepository.saveAll(languages);
+        languages.forEach(language -> languageCache.
+        		put(new CacheKey(language.getId()), language));
+        return languages.stream()
+                .map(Language::getName)
+                .map(name -> name + " - created")
+                .collect(Collectors.toList());
+     }
 }

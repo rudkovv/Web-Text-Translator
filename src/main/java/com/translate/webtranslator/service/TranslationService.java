@@ -7,6 +7,8 @@ import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.TextRepository;
 import com.translate.webtranslator.repository.TranslationRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,11 @@ public class TranslationService {
         this.translationCache = new InMemoryCache();
     }
 
-    public List<Translation> getAllTranslations() {
-    	return translationRepository.findAll();
+    public String getAllTranslations() {
+    	List<Translation> translations = translationRepository.findAll();
+    	return translations.stream()
+                .map(Translation::toString)
+                .collect(Collectors.joining("\n"));
     }
     
     /**
@@ -44,13 +49,13 @@ public class TranslationService {
      * @param newTranslation The new translation to save.
      * @return The saved translation.
      */
-    public Translation saveTranslation(Translation newTranslation) {
+    public String saveTranslation(Translation newTranslation) {
           if (newTranslation.getText() != null) {
               textRepository.save(newTranslation.getText());
           }
-          Translation savedTranslation = translationRepository.save(newTranslation);
-          translationCache.put(new CacheKey(savedTranslation.getId()), savedTranslation);
-          return savedTranslation;
+          translationRepository.save(newTranslation);
+          translationCache.put(new CacheKey(newTranslation.getId()), newTranslation);
+          return newTranslation.getTranslatedText() + " successfully save";
     }
     
     /**
@@ -61,6 +66,9 @@ public class TranslationService {
      * @return A string indicating the success of the deletion.
      */
     public String deleteTranslation(Long translationId) {
+    	translationRepository.findById(translationId)
+                .orElseThrow(() -> new IllegalStateException(
+                "Translation with Id: " + translationId + " doesn't exist!"));
         translationRepository.deleteById(translationId);
         translationCache.remove(new CacheKey(translationId));
         return "successfullyy delete translation";
@@ -109,5 +117,15 @@ public class TranslationService {
     public Translation getTranslationByTranslation(String translation) {
         return translationRepository.findByTranslatedText(translation).orElse(null);
     }
+    
+    public List<String> bulkSaveTranslation(final List<Translation> translations) {
+    	translationRepository.saveAll(translations);
+    	translations.forEach(translation -> translationCache
+    			.put(new CacheKey(translation.getId()), translation));
+        return translations.stream()
+                .map(Translation::getTranslatedText)
+                .map(translatedText -> translatedText + " - created")
+                .collect(Collectors.toList());
+     }
 
 }

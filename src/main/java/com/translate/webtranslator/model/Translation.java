@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * The Translation class represents a translation in the Web-Text-Translator application.
@@ -22,6 +23,7 @@ public class Translation {
     private Long id;
 
 	@NotBlank
+	@NotNull
     private String translatedText;
 
     @ManyToOne
@@ -51,5 +53,20 @@ public class Translation {
 
     public void setText(Text text) {
         this.text = text;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id);
+        sb.append("\ntranslation: ").append(translatedText).append("\n");
+
+        if (text != null) {
+            sb.append("text: ").append(text.getText());
+        }
+        
+        sb.append("\n");
+        
+        return sb.toString();
     }
 }

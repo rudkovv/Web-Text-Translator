@@ -6,6 +6,8 @@ import com.translate.webtranslator.model.Language;
 import com.translate.webtranslator.service.LanguageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +38,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Get all the languages",
                description = "Allows you to view all languages in the database")
-    public List<Language> getAllLanguages() {
+    public String getAllLanguages() {
         return languageService.getAllLanguages();
     }
 
@@ -60,7 +62,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Create language",
                description = "Allows you to add new language to the database")
-    public Language addLanguage(@RequestBody Language newLanguage) {
+    public String addLanguage(@Valid @RequestBody Language newLanguage) {
         return languageService.saveLanguage(newLanguage);
     }
 
@@ -86,5 +88,13 @@ public class LanguageController {
                description = "Allows you to remove text to the language by entering the ID")
     public Language delInTextList(@RequestParam Long languageId, @RequestParam Long textId) {
         return languageService.delTextInTextList(languageId, textId);
+    }
+    
+    @PostMapping("/create/bulk")
+    @AspectAnnotation
+    @Operation(summary = "Create many languages(bulk)",
+               description = "Allows you to create many languages")
+    public List<String> bulkSaveLanguage(@Valid @RequestBody final List<Language> languages) {
+        return languageService.bulkSaveLanguage(languages);
     }
 }

@@ -11,6 +11,7 @@ import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.service.TranslationService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 /**
  * Controller for translation.
@@ -31,7 +32,7 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Get all translations",
                description = "Allows you to view all translations from the database")
-    public List<Translation> getAllTranslations() {
+    public String getAllTranslations() {
         return translationService.getAllTranslations();
     }
 
@@ -55,7 +56,7 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Create translation",
                description = "Allows you to add new translation to the database")
-    public Translation saveTranslation(@RequestBody Translation translation) {
+    public String saveTranslation(@Valid @RequestBody Translation translation) {
         return translationService.saveTranslation(translation);
     }
 
@@ -74,5 +75,13 @@ public class TranslationController {
     public Translation setNewTextId(
                                    @RequestParam Long translationId, @RequestParam Long newTextId) {
         return translationService.setNewText(translationId, newTextId);
+    }
+    
+    @PostMapping("/create/bulk")
+    @AspectAnnotation
+    @Operation(summary = "Create many translations(bulk)",
+               description = "Allows you to create many translations")
+    public List<String> bulkSaveTranslation(@Valid @RequestBody final List<Translation> transaltions) {
+        return translationService.bulkSaveTranslation(transaltions);
     }
 }

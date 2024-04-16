@@ -13,6 +13,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -28,6 +30,7 @@ public class Text {
 	private Long id;
 
 	@NotBlank
+	@NotNull
 	private String textToTranslate;
 	
 	@JsonIgnoreProperties("text")
@@ -76,6 +79,30 @@ public class Text {
 
     public void setLanguages(List<Language> languages) {
         this.languages = languages;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id);
+        sb.append("\ntext: ").append(textToTranslate);
+
+        if (translations != null && !translations.isEmpty()) {
+            sb.append("\ntranslations: ");
+            for (Translation translation : translations) {
+                sb.append(translation.getTranslatedText()).append(" ");
+            }
+        }
+
+        if (languages != null && !languages.isEmpty()) {
+            sb.append("\nlanguages: ");
+            for (Language language : languages) {
+                sb.append(language.getName()).append(" ");
+            }
+        }
+        sb.append("\n");
+
+        return sb.toString();
     }
 
 }

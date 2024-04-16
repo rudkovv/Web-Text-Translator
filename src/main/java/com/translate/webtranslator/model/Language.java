@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ public class Language {
     private Long id;
 
 	@NotBlank
+	@NotNull
     private String name;
 
     @ManyToMany(mappedBy = "languages",
@@ -53,5 +56,23 @@ public class Language {
 
     public void setTexts(List<Text> texts) {
         this.texts = texts;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(id);
+        sb.append("\nname: ").append(name).append("\n");
+
+        if (texts != null && !texts.isEmpty()) {
+            sb.append("texts: ");
+            for (Text text : texts) {
+                sb.append(text.getText()).append(" ");
+            }
+        }
+        
+        sb.append("\n");
+
+        return sb.toString();
     }
 }

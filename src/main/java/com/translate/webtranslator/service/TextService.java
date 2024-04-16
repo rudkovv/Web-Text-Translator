@@ -7,6 +7,8 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,11 @@ public class TextService {
         this.textCache = new InMemoryCache();
     }
 
-    public List<Text> getAllTexts() {
-        return textRepository.findAll();
+    public String getAllTexts() {
+    	List<Text> texts = textRepository.findAll();
+    	return texts.stream()
+                 .map(Text::toString)
+                 .collect(Collectors.joining("\n"));
     }
 
     /**
@@ -80,7 +85,7 @@ public class TextService {
     public String saveText(Text text) {
         textRepository.save(text);
         textCache.put(new CacheKey(text.getId()), text);
-        return "successfully save text";
+        return text.getText() + " successfully save";
     }
 
     /**
@@ -133,5 +138,14 @@ public class TextService {
     
     public List<String> findTextsByLanguage(String language) {
         return textRepository.findTextsByLanguage(language);
+    }
+    
+    public List<String> bulkSaveText(final List<Text> texts) {
+       textRepository.saveAll(texts);
+       texts.forEach(text -> textCache.put(new CacheKey(text.getId()), text));
+       return texts.stream()
+               .map(Text::getText)
+               .map(textToTranslate -> textToTranslate + " - created")
+               .collect(Collectors.toList());
     }
 }

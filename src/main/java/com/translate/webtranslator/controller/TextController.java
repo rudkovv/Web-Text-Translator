@@ -33,7 +33,7 @@ public class TextController {
     @AspectAnnotation
     @Operation(summary = "Get all the text",
                description = "Allows you to view all the texts in the database")
-    public List<Text> getAllTexts() {
+    public String getAllTexts() {
         return textService.getAllTexts();
     }
     
@@ -97,4 +97,13 @@ public class TextController {
                        @RequestParam(required = false) String text) {
         return textService.updateText(textId, text);
     }
+    
+    @PostMapping("/create/bulk")
+    @AspectAnnotation
+    @Operation(summary = "Create many texts(bulk)",
+               description = "Allows you to create many texts")
+    public List<String> bulkSaveText(@Valid @RequestBody final List<Text> texts) {
+        return textService.bulkSaveText(texts);
+    }
+
 }
