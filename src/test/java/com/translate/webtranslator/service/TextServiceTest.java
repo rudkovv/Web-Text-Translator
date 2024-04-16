@@ -10,11 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.translate.webtranslator.cache.InMemoryCache;
@@ -40,27 +39,6 @@ public class TextServiceTest {
 	
 	@InjectMocks
 	private TextService textService;
-	
-//	private static List<Text> textList;
-//
-//    private Text text;
-//
-//    private Translation translation, translationWithText;
-//
-//    private Language language;
-//
-//    private final Long textId = 100L;
-//
-//    private final Long translationId = 101L;
-//
-//    private final Long languageId = 102L;
-//
-//    private static final int NUM_OF_REPEATS = 5;
-	@BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        textService = new TextService(textRepository);
-    }
     
     @Test
     void testGetAllTexts() {
