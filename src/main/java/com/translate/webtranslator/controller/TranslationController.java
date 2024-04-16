@@ -64,7 +64,7 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Delete translation by ID",
                description = "Allows you to delete translation by the entered ID")
-    public String deleteTranslation(@PathVariable Long id) {
+    public Translation deleteTranslation(@PathVariable Long id) {
         return translationService.deleteTranslation(id);
     }
     

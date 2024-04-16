@@ -146,6 +146,6 @@ public class TextService {
        return texts.stream()
                .map(Text::getText)
                .map(textToTranslate -> textToTranslate + " - created")
-               .collect(Collectors.toList());
+               .toList();
     }
 }

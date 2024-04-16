@@ -65,13 +65,13 @@ public class TranslationService {
      * @param translationId The ID of the translation to delete.
      * @return A string indicating the success of the deletion.
      */
-    public String deleteTranslation(Long translationId) {
-    	translationRepository.findById(translationId)
+    public Translation deleteTranslation(Long translationId) {
+    	Translation translation = translationRepository.findById(translationId)
                 .orElseThrow(() -> new IllegalStateException(
                 "Translation with Id: " + translationId + " doesn't exist!"));
         translationRepository.deleteById(translationId);
         translationCache.remove(new CacheKey(translationId));
-        return "successfullyy delete translation";
+        return translation;
     }
     
     /**
@@ -125,7 +125,7 @@ public class TranslationService {
         return translations.stream()
                 .map(Translation::getTranslatedText)
                 .map(translatedText -> translatedText + " - created")
-                .collect(Collectors.toList());
+                .toList();
      }
 
 }

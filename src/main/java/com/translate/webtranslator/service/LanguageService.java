@@ -160,6 +160,6 @@ public class LanguageService {
         return languages.stream()
                 .map(Language::getName)
                 .map(name -> name + " - created")
-                .collect(Collectors.toList());
+                .toList();
      }
 }
