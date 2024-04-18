@@ -102,7 +102,7 @@ public class TextController {
     @AspectAnnotation
     @Operation(summary = "Create many texts(bulk)",
                description = "Allows you to create many texts")
-    public List<String> bulkSaveText(@Valid @RequestBody final List<Text> texts) {
+    public List<String> bulkSaveText(@RequestBody final List<Text> texts) {
         return textService.bulkSaveText(texts);
     }
 

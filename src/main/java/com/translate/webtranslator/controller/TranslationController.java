@@ -81,7 +81,7 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Create many translations(bulk)",
                description = "Allows you to create many translations")
-    public List<String> bulkSaveTranslation(@Valid @RequestBody final List<Translation> transaltions) {
+    public List<String> bulkSaveTranslation(@RequestBody  List<Translation> transaltions) {
         return translationService.bulkSaveTranslation(transaltions);
     }
 }

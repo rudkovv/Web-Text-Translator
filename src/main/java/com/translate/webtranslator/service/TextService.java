@@ -27,7 +27,12 @@ public class TextService {
         this.textCache = new InMemoryCache();
     }
 
-    public List<Text> getAllTexts() {
+    public TextService(TextRepository textRepository, InMemoryCache textCache) {
+		this.textRepository = textRepository;
+		this.textCache = textCache;
+	}
+
+	public List<Text> getAllTexts() {
     	List<Text> texts = textRepository.findAll();
     	return texts;
     }
@@ -137,7 +142,7 @@ public class TextService {
         return textRepository.findTextsByLanguage(language);
     }
     
-    public List<String> bulkSaveText(final List<Text> texts) {
+    public List<String> bulkSaveText(List<Text> texts) {
        textRepository.saveAll(texts);
        texts.forEach(text -> textCache.put(new CacheKey(text.getId()), text));
        return texts.stream()
@@ -145,4 +150,12 @@ public class TextService {
                .map(textToTranslate -> textToTranslate + " - created")
                .toList();
     }
+
+	public Object getTextRepository() {
+		return textRepository;
+	}
+
+	public Object getTextCache() {
+		return textCache;
+	}
 }

@@ -94,7 +94,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Create many languages(bulk)",
                description = "Allows you to create many languages")
-    public List<String> bulkSaveLanguage(@Valid @RequestBody final List<Language> languages) {
+    public List<String> bulkSaveLanguage(@RequestBody List<Language> languages) {
         return languageService.bulkSaveLanguage(languages);
     }
 }

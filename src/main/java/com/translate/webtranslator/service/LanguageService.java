@@ -32,7 +32,14 @@ public class LanguageService {
         this.languageCache = new InMemoryCache();
     }
 
-    public List<Language> getAllLanguages() {
+    public LanguageService(LanguageRepository languageRepository, TextRepository textRepository,
+			InMemoryCache languageCache) {
+		this.languageRepository =  languageRepository;
+		this.textRepository = textRepository;
+		this.languageCache = languageCache;
+	}
+
+	public List<Language> getAllLanguages() {
     	List<Language> languages = languageRepository.findAll();
     	return languages;
     }
@@ -150,7 +157,7 @@ public class LanguageService {
         return languageRepository.findById(languageId).orElse(null);
     }
     
-    public List<String> bulkSaveLanguage(final List<Language> languages) {
+    public List<String> bulkSaveLanguage(List<Language> languages) {
     	languageRepository.saveAll(languages);
         languages.forEach(language -> languageCache.
         		put(new CacheKey(language.getId()), language));
@@ -158,5 +165,5 @@ public class LanguageService {
                 .map(Language::getName)
                 .map(name -> name + " - created")
                 .toList();
-     }
+    }
 }

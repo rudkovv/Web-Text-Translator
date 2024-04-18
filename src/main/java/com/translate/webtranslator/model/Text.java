@@ -13,7 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -30,7 +29,6 @@ public class Text {
 	private Long id;
 
 	@NotBlank
-	@NotNull
 	private String textToTranslate;
 	
 	@JsonIgnoreProperties("text")
@@ -41,7 +39,7 @@ public class Text {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},
     	    fetch = FetchType.LAZY)
     @JsonIgnoreProperties("texts")
-    @JoinTable(
+    @JoinTable(	
         name = "textLanguage",
         joinColumns = @JoinColumn(name = "textId"),
         inverseJoinColumns = @JoinColumn(name = "languageId")

@@ -33,7 +33,14 @@ public class TranslationService {
         this.translationCache = new InMemoryCache();
     }
 
-    public List<Translation> getAllTranslations() {
+    public TranslationService(TranslationRepository translationRepository, TextRepository textRepository,
+			InMemoryCache translationCache) {
+		this.textRepository = textRepository;
+		this.translationRepository = translationRepository;
+		this.translationCache = translationCache;
+	}
+
+	public List<Translation> getAllTranslations() {
     	List<Translation> translations = translationRepository.findAll();
     	return translations;
     }
@@ -115,7 +122,7 @@ public class TranslationService {
         return translationRepository.findByTranslatedText(translation).orElse(null);
     }
     
-    public List<String> bulkSaveTranslation(final List<Translation> translations) {
+    public List<String> bulkSaveTranslation(List<Translation> translations) {
     	translationRepository.saveAll(translations);
     	translations.forEach(translation -> translationCache
     			.put(new CacheKey(translation.getId()), translation));
