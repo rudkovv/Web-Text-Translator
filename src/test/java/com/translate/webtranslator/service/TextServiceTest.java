@@ -92,7 +92,7 @@ class TextServiceTest {
     }
     
     @Test
-    public void testGetTextByIdTextInRepository() {
+    void testGetTextByIdTextInRepository() {
         Long textId = 1L;
         Text repositoryText = new Text();
         repositoryText.setId(textId);
