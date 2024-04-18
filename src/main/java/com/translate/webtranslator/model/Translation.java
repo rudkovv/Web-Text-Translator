@@ -28,10 +28,6 @@ public class Translation {
     @JoinColumn(name = "textId")
     @JsonIgnoreProperties("translations")
     private Text text;
-    
-    //public Translation() {
-    	
-  //  }
 
 	public Long getId() {
         return id;

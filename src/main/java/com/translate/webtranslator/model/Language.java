@@ -8,9 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The Language class represents a language in the Web-Text-Translator application.
@@ -25,8 +25,7 @@ public class Language {
     private Long id;
 
 	@NotBlank
-	@NotNull
-    private String name;
+	private String name;
 
     @ManyToMany(mappedBy = "languages",
     		    cascade = {CascadeType.PERSIST, CascadeType.DETACH, 
@@ -57,5 +56,24 @@ public class Language {
     public void setTexts(List<Text> texts) {
         this.texts = texts;
     }
- 
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Language other = (Language) obj;
+        return Objects.equals(id, other.id) &&
+               Objects.equals(name, other.name) &&
+               Objects.equals(texts, other.texts);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, texts);
+    }
+
 }
