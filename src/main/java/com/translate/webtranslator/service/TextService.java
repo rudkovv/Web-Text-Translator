@@ -33,8 +33,7 @@ public class TextService {
 	}
 
 	public List<Text> getAllTexts() {
-    	List<Text> texts = textRepository.findAll();
-    	return texts;
+		return textRepository.findAll();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.translate.webtranslator.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -28,7 +29,7 @@ import com.translate.webtranslator.repository.TextRepository;
 import com.translate.webtranslator.repository.TranslationRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class TranslationServiceTest {
+class TranslationServiceTest {
 
 	@Mock
 	private TextRepository textRepository;
@@ -53,6 +54,7 @@ public class TranslationServiceTest {
 	@Test
 	void testConstructorInjection() {
 		translationService = new TranslationService(translationRepository,textRepository);
+		assertNotNull(translationService);
 	}
 	
 	@Test

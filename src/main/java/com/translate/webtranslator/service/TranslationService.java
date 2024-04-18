@@ -41,8 +41,7 @@ public class TranslationService {
 	}
 
 	public List<Translation> getAllTranslations() {
-    	List<Translation> translations = translationRepository.findAll();
-    	return translations;
+		return translationRepository.findAll();
     }
     
     /**

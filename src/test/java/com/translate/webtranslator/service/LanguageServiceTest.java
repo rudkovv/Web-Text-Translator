@@ -31,7 +31,7 @@ import com.translate.webtranslator.repository.TextRepository;
 import com.translate.webtranslator.repository.TranslationRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class LanguageServiceTest {
+class LanguageServiceTest {
 
 	@Mock
 	private TextRepository textRepository;
@@ -56,6 +56,7 @@ public class LanguageServiceTest {
 	@Test
 	void testConstructorInjection() {
 		languageService = new LanguageService(languageRepository, textRepository);
+		assertNotNull(languageService);
 	}
 	
 	@Test

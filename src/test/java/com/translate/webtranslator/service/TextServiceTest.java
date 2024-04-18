@@ -33,7 +33,7 @@ import com.translate.webtranslator.repository.TextRepository;
 import com.translate.webtranslator.repository.TranslationRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class TextServiceTest {
+class TextServiceTest {
 
 	@Mock
 	private TextRepository textRepository;
@@ -58,6 +58,7 @@ public class TextServiceTest {
 	@Test
 	void testConstructorInjection() {
 		textService = new TextService(textRepository);
+		assertNotNull(textService);
 	}
     
     @Test
@@ -78,7 +79,7 @@ public class TextServiceTest {
     }
     
     @Test
-    public void testGetTextByIdTextInCache() {
+    void testGetTextByIdTextInCache() {
         Long textId = 1L;
         Text cachedText = new Text();
         cachedText.setId(textId);
@@ -104,7 +105,7 @@ public class TextServiceTest {
     }
     
     @Test
-    public void testGetTextByIdTextNotFound() {
+    void testGetTextByIdTextNotFound() {
         Long textId = 1L;
         when(textRepository.findById(textId)).thenReturn(Optional.empty());
         Text result = textService.getTextById(textId);
@@ -128,7 +129,7 @@ public class TextServiceTest {
     }
     
     @Test
-    public void testSaveText() {
+    void testSaveText() {
         Text text = new Text();
         text.setId(1L);
         text.setText("Sample text");
@@ -164,7 +165,7 @@ public class TextServiceTest {
     }
     
     @Test
-    public void testUpdateTextNonExistingText() {
+    void testUpdateTextNonExistingText() {
         Long textId = 1L;
         String newText = "Updated text";
         when(textRepository.findById(textId)).thenReturn(Optional.empty());
@@ -175,7 +176,7 @@ public class TextServiceTest {
     }
     
     @Test
-    public void testFindTextsSortedByLanguage() {
+    void testFindTextsSortedByLanguage() {
         String language = "English";
         List<String> expectedTexts = Arrays.asList("Text 1", "Text 2", "Text 3");
         when(textRepository.findTextsSortedByLanguage(language)).thenReturn(expectedTexts);
@@ -245,7 +246,7 @@ public class TextServiceTest {
     }
     
     @Test
-    public void testFindTextsByLanguage() {
+    void testFindTextsByLanguage() {
         String language = "English";
         List<String> expectedTexts = Arrays.asList("Text 1", "Text 2", "Text 3");
         when(textRepository.findTextsByLanguage(language)).thenReturn(expectedTexts);

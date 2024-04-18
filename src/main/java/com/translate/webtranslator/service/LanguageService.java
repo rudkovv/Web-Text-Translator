@@ -40,8 +40,7 @@ public class LanguageService {
 	}
 
 	public List<Language> getAllLanguages() {
-    	List<Language> languages = languageRepository.findAll();
-    	return languages;
+		return languageRepository.findAll();
     }
     
     /**
