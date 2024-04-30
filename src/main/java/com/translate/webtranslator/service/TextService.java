@@ -1,5 +1,6 @@
 package com.translate.webtranslator.service;
 
+import com.translate.webtranslator.aspect.RequestCounterAnnotation;
 import com.translate.webtranslator.cache.CacheKey;
 import com.translate.webtranslator.cache.InMemoryCache;
 import com.translate.webtranslator.model.Language;
@@ -32,6 +33,7 @@ public class TextService {
 		this.textCache = textCache;
 	}
 
+    @RequestCounterAnnotation
 	public List<Text> getAllTexts() {
 		return textRepository.findAll();
     }
@@ -43,6 +45,7 @@ public class TextService {
      * @param textId The ID of the text to retrieve.
      * @return The text with the specified ID, or null if not found.
      */
+    @RequestCounterAnnotation
     public Text getTextById(Long textId) {
     	Text cachedText = (Text) textCache.get(new CacheKey(textId));
         if (cachedText != null) {
@@ -63,6 +66,7 @@ public class TextService {
      * @param text The content of the text to retrieve.
      * @return The text with the specified content, or null if not found.
      */
+    @RequestCounterAnnotation
     public Text getTextByText(String text) {
     	 Text cachedText = (Text) textCache.get(new CacheKey(text));
     	 if (cachedText != null) {
@@ -83,6 +87,7 @@ public class TextService {
      * @param text The text to save.
      * @return A string indicating the success of the save operation.
      */
+    @RequestCounterAnnotation
     public String saveText(Text text) {
         textRepository.save(text);
         textCache.put(new CacheKey(text.getId()), text);
@@ -97,6 +102,7 @@ public class TextService {
      * @param newText The new content of the text.
      * @return The updated text.
      */
+    @RequestCounterAnnotation
     public Text updateText(Long textId, String newText) {
         Text text = textRepository.findById(textId)
                 .orElseThrow(() -> new IllegalStateException(
@@ -116,6 +122,7 @@ public class TextService {
      * @param textId The ID of the text to delete.
      * @return A string indicating the success of the deletion.
      */
+    @RequestCounterAnnotation
     public String deleteText(Long textId) {
     	textCache.remove(new CacheKey(textId));
     	Text text = textRepository.findById(textId)
@@ -133,14 +140,17 @@ public class TextService {
         return "successfully delete text";
     }
     
+    @RequestCounterAnnotation
     public List<String> findTextsSortedByLanguage(String language) {
         return textRepository.findTextsSortedByLanguage(language);
     }
     
+    @RequestCounterAnnotation
     public List<String> findTextsByLanguage(String language) {
         return textRepository.findTextsByLanguage(language);
     }
     
+    @RequestCounterAnnotation
     public List<String> bulkSaveText(List<Text> texts) {
        textRepository.saveAll(texts);
        texts.forEach(text -> textCache.put(new CacheKey(text.getId()), text));

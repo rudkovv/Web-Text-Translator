@@ -1,5 +1,6 @@
 package com.translate.webtranslator.service;
 
+import com.translate.webtranslator.aspect.RequestCounterAnnotation;
 import com.translate.webtranslator.cache.CacheKey;
 import com.translate.webtranslator.cache.InMemoryCache;
 import com.translate.webtranslator.model.Language;
@@ -7,7 +8,6 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +40,7 @@ public class LanguageService {
 		this.languageCache = languageCache;
 	}
 
+    @RequestCounterAnnotation
 	public List<Language> getAllLanguages() {
 		return languageRepository.findAll();
     }
@@ -51,6 +52,7 @@ public class LanguageService {
      * @param languageId The ID of the language to retrieve.
      * @return The language with the specified ID, or null if not found.
      */
+    @RequestCounterAnnotation
     public Language getLanguageById(Long languageId) {
         Language cachedLanguage = (Language) languageCache.get(new CacheKey(languageId));
         if (cachedLanguage != null) {
@@ -70,6 +72,7 @@ public class LanguageService {
      * @param language The name of the language to retrieve.
      * @return The language with the specified name, or null if not found.
      */
+    @RequestCounterAnnotation
     public Language getLanguageByLanguage(String language) {
         Language cachedLanguage = (Language) languageCache.get(new CacheKey(language));
         if (cachedLanguage != null) {
@@ -89,6 +92,7 @@ public class LanguageService {
      * @param language The language to save.
      * @return The saved language.
      */
+    @RequestCounterAnnotation
     public String saveLanguage(Language language) {
     	languageRepository.save(language);
     	languageCache.put(new CacheKey(language.getId()), language);
@@ -101,6 +105,7 @@ public class LanguageService {
      * @param languageId The ID of the language to delete.
      * @return A string indicating the success of the deletion.
      */
+    @RequestCounterAnnotation
     public String deleteLanguage(Long languageId) {
     	Language language = languageRepository.findById(languageId)
     			           .orElseThrow(() -> new IllegalStateException("Error to delete"));
@@ -122,6 +127,7 @@ public class LanguageService {
      * @param textId The ID of the text to add.
      * @return The updated language.
      */
+    @RequestCounterAnnotation
     public Language addTextInTextList(Long languageId, Long textId) {
     	Language language = languageRepository.findById(languageId)
     			.orElseThrow(() -> new IllegalStateException(
@@ -145,6 +151,7 @@ public class LanguageService {
      * @param textId The ID of the text to remove.
      * @return The updated language.
      */
+    @RequestCounterAnnotation
     public Language delTextInTextList(Long languageId, Long textId) {
         Text text = textRepository.findById(textId)
         		.orElseThrow(() -> new IllegalStateException("text doesnt exist"));
@@ -157,10 +164,11 @@ public class LanguageService {
         return languageRepository.findById(languageId).orElse(null);
     }
     
+    @RequestCounterAnnotation
     public List<String> bulkSaveLanguage(List<Language> languages) {
     	languageRepository.saveAll(languages);
-        languages.forEach(language -> languageCache.
-        		put(new CacheKey(language.getId()), language));
+        languages.forEach(language -> languageCache
+        		.put(new CacheKey(language.getId()), language));
         return languages.stream()
                 .map(Language::getName)
                 .map(name -> name + " - created")

@@ -6,6 +6,8 @@ import com.translate.webtranslator.model.Language;
 import com.translate.webtranslator.service.LanguageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,7 +62,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Create language",
                description = "Allows you to add new language to the database")
-    public String addLanguage(@RequestBody Language newLanguage) {
+    public String addLanguage(@Valid @RequestBody Language newLanguage) {
         return languageService.saveLanguage(newLanguage);
     }
     

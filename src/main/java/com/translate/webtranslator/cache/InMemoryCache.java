@@ -35,7 +35,7 @@ public class InMemoryCache {
      * @param cacheKey The key to store in the cache.
      * @param value The value to associate with the key.
      */
-    public void put(CacheKey cacheKey, Object value) {
+    public synchronized void put(CacheKey cacheKey, Object value) {
         if (cacheMap.containsKey(cacheKey)) {
             cacheMap.put(cacheKey, value);
         } else {
@@ -54,7 +54,7 @@ public class InMemoryCache {
      * @param cacheKey The key whose associated value is to be retrieved.
      * @return The value associated with the key, or null if the key is not found in the cache.
      */
-    public Object get(CacheKey cacheKey) {
+    public synchronized Object get(CacheKey cacheKey) {
         return cacheMap.get(cacheKey);
     }
 
@@ -63,7 +63,7 @@ public class InMemoryCache {
      *
      * @param cacheKey The key to be removed from the cache.
      */
-    public void remove(CacheKey cacheKey) {
+    public synchronized void remove(CacheKey cacheKey) {
         cacheMap.remove(cacheKey);
         keyQueue.remove(cacheKey);
     }
@@ -71,7 +71,7 @@ public class InMemoryCache {
     /**
      * Clears the cache, removing all key-value pairs.
      */
-    public void clear() {
+    public synchronized void clear() {
         cacheMap.clear();
         keyQueue.clear();
     }
@@ -81,7 +81,7 @@ public class InMemoryCache {
      *
      * @return The number of key-value pairs currently stored in the cache.
      */
-    public int getSize() {
+    public synchronized int getSize() {
         return cacheMap.size();
     }
 }

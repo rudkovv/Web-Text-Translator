@@ -1,5 +1,6 @@
 package com.translate.webtranslator.service;
 
+import com.translate.webtranslator.aspect.RequestCounterAnnotation;
 import com.translate.webtranslator.cache.CacheKey;
 import com.translate.webtranslator.cache.InMemoryCache;
 import com.translate.webtranslator.model.Text;
@@ -40,6 +41,7 @@ public class TranslationService {
 		this.translationCache = translationCache;
 	}
 
+    @RequestCounterAnnotation
 	public List<Translation> getAllTranslations() {
 		return translationRepository.findAll();
     }
@@ -52,6 +54,7 @@ public class TranslationService {
      * @param newTranslation The new translation to save.
      * @return The saved translation.
      */
+    @RequestCounterAnnotation
     public String saveTranslation(Translation newTranslation) {
           if (newTranslation.getText() != null) {
               textRepository.save(newTranslation.getText());
@@ -68,6 +71,7 @@ public class TranslationService {
      * @param translationId The ID of the translation to delete.
      * @return A string indicating the success of the deletion.
      */
+    @RequestCounterAnnotation
     public Translation deleteTranslation(Long translationId) {
     	Translation translation = translationRepository.findById(translationId)
                 .orElseThrow(() -> new IllegalStateException(
@@ -84,6 +88,7 @@ public class TranslationService {
      * @param newTextId The ID of the new text.
      * @return The updated translation.
      */
+    @RequestCounterAnnotation
     public Translation setNewText(Long transaltionId, Long newTextId) {
         Translation translation = translationRepository.findById(transaltionId)
         		.orElseThrow(() -> new IllegalStateException(
@@ -103,6 +108,7 @@ public class TranslationService {
      *
      * @return The translation with the specified ID, or null if not found.
      */
+    @RequestCounterAnnotation
     public Translation getById(Long translationid) {
     	Translation cachedTranslation = (Translation) translationCache.get(
     			                                   new CacheKey(translationid));
@@ -117,10 +123,12 @@ public class TranslationService {
         }
     }
     
+    @RequestCounterAnnotation
     public Translation getTranslationByTranslation(String translation) {
         return translationRepository.findByTranslatedText(translation).orElse(null);
     }
     
+    @RequestCounterAnnotation
     public List<String> bulkSaveTranslation(List<Translation> translations) {
     	translationRepository.saveAll(translations);
     	translations.forEach(translation -> translationCache
