@@ -6,16 +6,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class RequestCounter {
     private static final AtomicInteger counter = new AtomicInteger(0);
+    
+    private RequestCounter() {
+    
+    }
 
-    public synchronized static void increment() {
+    public static void increment() {
         counter.incrementAndGet();
     }
 
-    public synchronized static int getCount() {
+    public static int getCount() {
         return counter.get();
     }
 
-    public synchronized static void reset() {
+    public static void reset() {
         counter.set(0);
     }
 }
