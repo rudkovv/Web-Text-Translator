@@ -96,8 +96,7 @@ public class LanguageService {
                 textRepository.save(text);
             }
         }
-        Language savedLanguage = languageRepository.save(language);
-        return savedLanguage;
+        return languageRepository.save(language);
     }
     
 
