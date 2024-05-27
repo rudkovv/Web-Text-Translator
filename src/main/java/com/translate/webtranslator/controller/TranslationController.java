@@ -3,6 +3,7 @@ package com.translate.webtranslator.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import com.translate.webtranslator.aspect.AspectAnnotation;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 /**
  * Controller for translation.
  */
+@CrossOrigin
 @RestExceptionHandler
 @RestController
 @RequestMapping("/api/translations")
@@ -32,8 +34,9 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Get all translations",
                description = "Allows you to view all translations from the database")
-    public List<Translation> getAllTranslations() {
-        return translationService.getAllTranslations();
+    public Page<Translation> getAllTranslations(@RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size) {
+    	return translationService.getTranslationsWithPagination(page, size);
     }
 
     @GetMapping("/find/byId/{id}")
@@ -56,7 +59,7 @@ public class TranslationController {
     @AspectAnnotation
     @Operation(summary = "Create translation",
                description = "Allows you to add new translation to the database")
-    public String saveTranslation(@Valid @RequestBody Translation translation) {
+    public Translation saveTranslation(@Valid @RequestBody Translation translation) {
         return translationService.saveTranslation(translation);
     }
 

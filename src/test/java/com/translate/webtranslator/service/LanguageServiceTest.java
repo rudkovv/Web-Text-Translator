@@ -117,7 +117,7 @@ class LanguageServiceTest {
         Language uncachedLanguage = new Language();
         uncachedLanguage.setId(1L);
         uncachedLanguage.setName("English");
-        when(languageRepository.findByName("English")).thenReturn(Optional.of(uncachedLanguage));
+        when(languageRepository.findByName("English")).thenReturn(uncachedLanguage);
         Language language = languageService.getLanguageByLanguage("English");
         assertEquals(uncachedLanguage, language);
         verify(languageRepository, times(1)).findByName("English");
@@ -127,7 +127,7 @@ class LanguageServiceTest {
     void testSaveLanguage() {
         Language language = new Language();
         language.setName("English");
-        String result = languageService.saveLanguage(language);
+        Language result = languageService.saveLanguage(language);
         assertEquals("English successfully save", result);
         verify(languageRepository, times(1)).save(language);
     }

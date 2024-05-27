@@ -8,6 +8,7 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.repository.LanguageRepository;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,11 +75,7 @@ public class LanguageService {
      */
     @RequestCounterAnnotation
     public Language getLanguageByLanguage(String language) {
-        Language cachedLanguage = (Language) languageCache.get(new CacheKey(language));
-        if (cachedLanguage != null) {
-            return cachedLanguage;
-        }
-        Language findLanguage = languageRepository.findByName(language).orElse(null);
+    	Language findLanguage = languageRepository.findByName(language);
         if (findLanguage != null) {
         	languageCache.put(new CacheKey(language), findLanguage);
         }
@@ -93,11 +90,18 @@ public class LanguageService {
      * @return The saved language.
      */
     @RequestCounterAnnotation
-    public String saveLanguage(Language language) {
-    	languageRepository.save(language);
-    	languageCache.put(new CacheKey(language.getId()), language);
-        return language.getName() + " successfully save";
+    public Language saveLanguage(Language language) {
+        if (language.getTexts() != null) {
+            for (Text text : language.getTexts()) {
+                textRepository.save(text);
+            }
+        }
+        Language savedLanguage = languageRepository.save(language);
+        return savedLanguage;
     }
+    
+
+    
     /**
      * Deletes a language by its ID.
      * Removes the language from the cache.

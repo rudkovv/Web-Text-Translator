@@ -6,10 +6,10 @@ import com.translate.webtranslator.model.Language;
 import com.translate.webtranslator.service.LanguageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
-
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller for language.
  */
+@CrossOrigin
 @RestExceptionHandler
 @RestController
 @RequestMapping("/api/languages")
@@ -62,7 +63,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Create language",
                description = "Allows you to add new language to the database")
-    public String addLanguage(@Valid @RequestBody Language newLanguage) {
+    public Language addLanguage(@RequestBody Language newLanguage) {
         return languageService.saveLanguage(newLanguage);
     }
     
@@ -70,7 +71,7 @@ public class LanguageController {
     @AspectAnnotation
     @Operation(summary = "Delete language by ID",
 	           description = "Allows you to delete language by the entered ID")
-    public String deleteTeam(@PathVariable Long languageId){
+    public String deleteLanguage(@PathVariable Long languageId){
         return languageService.deleteLanguage(languageId);
     }
 

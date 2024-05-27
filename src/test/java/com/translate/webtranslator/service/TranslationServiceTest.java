@@ -58,30 +58,6 @@ class TranslationServiceTest {
 	}
 	
 	@Test
-    void testGetAllTranslations() {
-        List<Translation> expectedTranslations = new ArrayList<>();
-        Text text1 = new Text();
-        text1.setId(1L);
-        text1.setText("Text 1");
-        Text text2 = new Text();
-        text2.setId(2L);
-        text2.setText("Text 2");
-        Translation translation1 = new Translation();
-        translation1.setId(1L);
-        translation1.setTranslatedText("Translation 1");
-        translation1.setText(text1);
-        Translation translation2 = new Translation();
-        translation2.setId(2L);
-        translation2.setTranslatedText("Translation 2");
-        translation2.setText(text2);
-        expectedTranslations.add(translation1);
-        expectedTranslations.add(translation2);
-        when(translationRepository.findAll()).thenReturn(expectedTranslations);
-        List<Translation> actualTranslations = translationService.getAllTranslations();
-        assertEquals(expectedTranslations, actualTranslations);
-    }
-	
-	@Test
     void testSaveTranslationWithText() {
         Translation newTranslation = new Translation();
         Text newText = new Text();
@@ -89,7 +65,7 @@ class TranslationServiceTest {
         newTranslation.setTranslatedText("Translated Text");
         when(textRepository.save(newText)).thenReturn(newText);
         when(translationRepository.save(newTranslation)).thenReturn(newTranslation);
-        String result = translationService.saveTranslation(newTranslation);
+        Translation result = translationService.saveTranslation(newTranslation);
         verify(textRepository).save(newText);
         verify(translationRepository).save(newTranslation);
         verify(translationCache).put(new CacheKey(newTranslation.getId()), newTranslation);
@@ -101,7 +77,7 @@ class TranslationServiceTest {
         Translation newTranslation = new Translation();
         newTranslation.setTranslatedText("Translated Text");
         when(translationRepository.save(newTranslation)).thenReturn(newTranslation);
-        String result = translationService.saveTranslation(newTranslation);
+        Translation result = translationService.saveTranslation(newTranslation);
         verify(translationRepository).save(newTranslation);
         verify(translationCache).put(new CacheKey(newTranslation.getId()), newTranslation);
         assertEquals("Translated Text successfully save", result);

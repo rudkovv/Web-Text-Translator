@@ -62,28 +62,11 @@ class TextServiceTest {
 	}
     
     @Test
-    void testGetAllTexts() {
-        List<Text> expectedTexts = new ArrayList<>();
-        Text text1 = new Text();
-        text1.setId(1L);
-        text1.setText("Text 1");
-        expectedTexts.add(text1);
-        Text text2 = new Text();
-        text2.setId(2L);
-        text2.setText("Text 2");
-        expectedTexts.add(text2);
-        when(textRepository.findAll()).thenReturn(expectedTexts);
-        List<Text> actualTexts = textService.getAllTexts();
-        assertEquals(expectedTexts, actualTexts);
-        verify(textRepository, times(1)).findAll();
-    }
-    
-    @Test
     void testGetTextByIdTextInCache() {
         Long textId = 1L;
         Text cachedText = new Text();
         cachedText.setId(textId);
-        cachedText.setText("Cached text");
+        cachedText.setTextToTranslate("Cached text");
         when(textCache.get(new CacheKey(textId))).thenReturn(cachedText);
         Text result = textService.getTextById(cachedText.getId());
         assertEquals(cachedText, result);
@@ -96,7 +79,7 @@ class TextServiceTest {
         Long textId = 1L;
         Text repositoryText = new Text();
         repositoryText.setId(textId);
-        repositoryText.setText("Repository text");
+        repositoryText.setTextToTranslate("Repository text");
         when(textCache.get(new CacheKey(textId))).thenReturn(null);
         when(textRepository.findById(textId)).thenReturn(Optional.of(repositoryText));
         Text result = textService.getTextById(textId);
@@ -119,7 +102,7 @@ class TextServiceTest {
         String text = "Text to translate";
         Text repositoryText = new Text();
         repositoryText.setId(1L);
-        repositoryText.setText(text);
+        repositoryText.setTextToTranslate(text);
         CacheKey cacheKey = new CacheKey(text);
         when(textCache.get(cacheKey)).thenReturn(null);
         when(textRepository.findByTextToTranslate(text)).thenReturn(Optional.of(repositoryText));
@@ -132,8 +115,8 @@ class TextServiceTest {
     void testSaveText() {
         Text text = new Text();
         text.setId(1L);
-        text.setText("Sample text");
-        String result = textService.saveText(text);
+        text.setTextToTranslate("Sample text");
+        Text result = textService.saveText(text);
         textCache.put(new CacheKey(text.getId()), text);
         assertEquals("Sample text successfully save", result);
         verify(textRepository, times(1)).save(text);
@@ -155,11 +138,11 @@ class TextServiceTest {
         String oldText = "Old text";
         Text existingText = new Text();
         existingText.setId(textId);
-        existingText.setText(oldText);
+        existingText.setTextToTranslate(oldText);
         when(textRepository.findById(textId)).thenReturn(Optional.of(existingText));
         when(textRepository.save(existingText)).thenReturn(existingText);
         Text result = textService.updateText(textId, newText);
-        assertEquals(newText, result.getText());
+        assertEquals(newText, result.getTextToTranslate());
         verify(textRepository, times(1)).findById(textId);
         verify(textRepository, times(1)).save(existingText);
     }
@@ -191,7 +174,7 @@ class TextServiceTest {
         String newText = "";
         Text existingText = new Text();
         existingText.setId(textId);
-        existingText.setText("Old Text");
+        existingText.setTextToTranslate("Old Text");
         when(textRepository.findById(textId)).thenReturn(Optional.of(existingText));
         when(textRepository.save(existingText)).thenReturn(existingText);
         Text result = textService.updateText(textId, newText);
@@ -205,7 +188,7 @@ class TextServiceTest {
         Long textId = 1L;
         Text existingText = new Text();
         existingText.setId(textId);
-        existingText.setText("Text");
+        existingText.setTextToTranslate("Text");
         List<Translation> translationsList = new ArrayList<>();
         Translation translation1 = new Translation();
         translation1.setTranslatedText("Translation 1");
@@ -260,13 +243,13 @@ class TextServiceTest {
         List<Text> texts = new ArrayList<>();
         Text text1 = new Text();
         text1.setId(1L);
-        text1.setText("Text 1");
+        text1.setTextToTranslate("Text 1");
         Text text2 = new Text();
         text2.setId(2L);
-        text2.setText("Text 2");
+        text2.setTextToTranslate("Text 2");
         Text text3 = new Text();
         text3.setId(3L);
-        text3.setText("Text 3");
+        text3.setTextToTranslate("Text 3");
         texts.add(text1);
         texts.add(text2);
         texts.add(text3);

@@ -10,6 +10,10 @@ import com.translate.webtranslator.repository.TranslationRepository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,8 +46,9 @@ public class TranslationService {
 	}
 
     @RequestCounterAnnotation
-	public List<Translation> getAllTranslations() {
-		return translationRepository.findAll();
+    public Page<Translation> getTranslationsWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("translatedText").ascending());
+        return translationRepository.findAllTranslatiosWithPagination(pageable);
     }
     
     /**
@@ -55,13 +60,13 @@ public class TranslationService {
      * @return The saved translation.
      */
     @RequestCounterAnnotation
-    public String saveTranslation(Translation newTranslation) {
+    public Translation saveTranslation(Translation newTranslation) {
           if (newTranslation.getText() != null) {
               textRepository.save(newTranslation.getText());
           }
           translationRepository.save(newTranslation);
           translationCache.put(new CacheKey(newTranslation.getId()), newTranslation);
-          return newTranslation.getTranslatedText() + " successfully save";
+          return newTranslation;
     }
     
     /**

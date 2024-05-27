@@ -3,6 +3,9 @@ package com.translate.webtranslator.repository;
 import com.translate.webtranslator.model.Text;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +31,8 @@ public interface TextRepository extends JpaRepository<Text, Long> {
 	        + "JOIN t.languages tl "
 	        + "WHERE tl.name = :language ")
 	List<String> findTextsByLanguage(@Param("language") String language);
+
+    @Query("SELECT t FROM Text t ORDER BY t.textToTranslate ASC")
+    	Page<Text> findAllWithPagination(Pageable pageable);
+
 }

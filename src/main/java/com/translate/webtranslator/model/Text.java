@@ -33,10 +33,10 @@ public class Text {
 	
 	@JsonIgnoreProperties("text")
 	@OneToMany(mappedBy = "text",  fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.ALL})
 	private List<Translation> translations;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},
+    @ManyToMany(cascade = {CascadeType.ALL},
     	    fetch = FetchType.LAZY)
     @JsonIgnoreProperties("texts")
     @JoinTable(	
@@ -55,11 +55,11 @@ public class Text {
         this.id = id;
     }
 
-    public String getText() {
+    public String getTextToTranslate() {
         return textToTranslate;
     }
 
-    public void setText(String text) {
+    public void setTextToTranslate(String text) {
         this.textToTranslate = text;
     }
 

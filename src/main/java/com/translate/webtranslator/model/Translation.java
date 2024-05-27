@@ -60,7 +60,7 @@ public class Translation {
         sb.append("\ntranslation: ").append(translatedText).append("\n");
 
         if (text != null) {
-            sb.append("text: ").append(text.getText());
+            sb.append("text: ").append(text.getTextToTranslate());
         }
         
         sb.append("\n");

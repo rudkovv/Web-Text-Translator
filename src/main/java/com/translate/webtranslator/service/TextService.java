@@ -8,8 +8,13 @@ import com.translate.webtranslator.model.Text;
 import com.translate.webtranslator.model.Translation;
 import com.translate.webtranslator.repository.TextRepository;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,8 +39,9 @@ public class TextService {
 	}
 
     @RequestCounterAnnotation
-	public List<Text> getAllTexts() {
-		return textRepository.findAll();
+    public Page<Text> getTextsWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("textToTranslate").ascending());
+        return textRepository.findAllWithPagination(pageable);
     }
 
     /**
@@ -88,10 +94,17 @@ public class TextService {
      * @return A string indicating the success of the save operation.
      */
     @RequestCounterAnnotation
-    public String saveText(Text text) {
-        textRepository.save(text);
-        textCache.put(new CacheKey(text.getId()), text);
-        return text.getText() + " successfully save";
+    public Text saveText(Text text) {
+        if (text == null) {
+            throw new IllegalArgumentException("Text cannot be null");
+        }
+        Optional<Text> existingText = textRepository.findByTextToTranslate(text.getTextToTranslate());
+        if (existingText.isPresent()) {
+            return text;
+        }
+        Text savedText = textRepository.save(text);
+        textCache.put(new CacheKey(savedText.getId()), savedText);
+        return textRepository.save(text);
     }
 
     /**
@@ -108,7 +121,7 @@ public class TextService {
                 .orElseThrow(() -> new IllegalStateException(
                 "Text with Id: " + textId + " doesn't exist!"));
         if (newText != null && !newText.isEmpty()) {
-            text.setText(newText);
+            text.setTextToTranslate(newText);
         }
         textCache.put(new CacheKey(textId), text);
         return textRepository.save(text);
@@ -155,7 +168,7 @@ public class TextService {
        textRepository.saveAll(texts);
        texts.forEach(text -> textCache.put(new CacheKey(text.getId()), text));
        return texts.stream()
-               .map(Text::getText)
+               .map(Text::getTextToTranslate)
                .map(textToTranslate -> textToTranslate + " - created")
                .toList();
     }
