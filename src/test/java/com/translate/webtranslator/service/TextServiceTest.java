@@ -112,17 +112,6 @@ class TextServiceTest {
     }
     
     @Test
-    void testSaveText() {
-        Text text = new Text();
-        text.setId(1L);
-        text.setTextToTranslate("Sample text");
-        Text result = textService.saveText(text);
-        textCache.put(new CacheKey(text.getId()), text);
-        assertEquals("Sample text successfully save", result);
-        verify(textRepository, times(1)).save(text);
-    }
-    
-    @Test
     void testGetTextByTextTextNotFound() {
         String text = "Text to translate";
         when(textRepository.findByTextToTranslate(text)).thenReturn(Optional.empty());

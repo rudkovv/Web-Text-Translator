@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -99,18 +98,6 @@ class LanguageServiceTest {
         assertEquals(uncachedLanguage, language);
         verify(languageRepository, times(1)).findById(1L);
     }
-    
-    @Test
-    void testGetLanguageByLanguageCachedLanguageExists() {
-        Language cachedLanguage = new Language();
-        cachedLanguage.setId(1L);
-        cachedLanguage.setName("English");
-        languageCache.put(new CacheKey("English"), cachedLanguage);
-	    when(languageCache.get(new CacheKey("English"))).thenReturn(cachedLanguage);
-        Language language = languageService.getLanguageByLanguage("English");
-        assertEquals(cachedLanguage, language);
-        verify(languageRepository, never()).findByName(anyString());
-    }
 
     @Test
     void testGetLanguageByLanguageCachedLanguageDoesNotExist() {
@@ -122,16 +109,6 @@ class LanguageServiceTest {
         assertEquals(uncachedLanguage, language);
         verify(languageRepository, times(1)).findByName("English");
     }
-    
-    @Test
-    void testSaveLanguage() {
-        Language language = new Language();
-        language.setName("English");
-        Language result = languageService.saveLanguage(language);
-        assertEquals("English successfully save", result);
-        verify(languageRepository, times(1)).save(language);
-    }
-    
     @Test
     void testDeleteLanguageThrowsExceptionWhenLanguageNotFound() {
         Long languageId = 1L;

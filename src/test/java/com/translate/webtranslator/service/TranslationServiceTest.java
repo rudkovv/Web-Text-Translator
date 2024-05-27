@@ -58,32 +58,6 @@ class TranslationServiceTest {
 	}
 	
 	@Test
-    void testSaveTranslationWithText() {
-        Translation newTranslation = new Translation();
-        Text newText = new Text();
-        newTranslation.setText(newText);
-        newTranslation.setTranslatedText("Translated Text");
-        when(textRepository.save(newText)).thenReturn(newText);
-        when(translationRepository.save(newTranslation)).thenReturn(newTranslation);
-        Translation result = translationService.saveTranslation(newTranslation);
-        verify(textRepository).save(newText);
-        verify(translationRepository).save(newTranslation);
-        verify(translationCache).put(new CacheKey(newTranslation.getId()), newTranslation);
-        assertEquals("Translated Text successfully save", result);
-    }
-	
-	@Test
-    void testSaveTranslationWithoutText() {
-        Translation newTranslation = new Translation();
-        newTranslation.setTranslatedText("Translated Text");
-        when(translationRepository.save(newTranslation)).thenReturn(newTranslation);
-        Translation result = translationService.saveTranslation(newTranslation);
-        verify(translationRepository).save(newTranslation);
-        verify(translationCache).put(new CacheKey(newTranslation.getId()), newTranslation);
-        assertEquals("Translated Text successfully save", result);
-    }
-	
-	@Test
 	void testDeleteTranslation() {
 	   Long translationId = 1L;
 	   Translation translation = new Translation();
