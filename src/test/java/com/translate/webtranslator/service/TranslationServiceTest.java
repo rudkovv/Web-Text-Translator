@@ -80,6 +80,31 @@ class TranslationServiceTest {
 	}
 
 	@Test
+	void shouldSaveTranslation() {
+		Translation translation = new Translation();
+		Text text = new Text();
+		translation.setText(text);
+
+		when(textRepository.save(any())).thenReturn(text);
+		when(translationRepository.save(any())).thenReturn(translation);
+
+		Translation savedTranslation = translationService.saveTranslation(translation);
+
+		assertEquals(translation, savedTranslation);
+	}
+
+	@Test
+	void shouldSaveTranslationWithoutText() {
+		Translation translation = new Translation();
+
+		when(translationRepository.save(any())).thenReturn(translation);
+
+		Translation savedTranslation = translationService.saveTranslation(translation);
+
+		assertEquals(translation, savedTranslation);
+	}
+
+	@Test
 	void shouldReturnEmptyPageWhenTranslationsDoNotExist() {
 		int page = 1;
 		int size = 10;

@@ -110,6 +110,36 @@ class TextServiceTest {
 	}
 
 	@Test
+	void shouldSaveText() {
+		Text text = new Text();
+		text.setTextToTranslate("test");
+
+		when(textRepository.findByTextToTranslate(any())).thenReturn(Optional.empty());
+		when(textRepository.save(any())).thenReturn(text);
+
+		Text savedText = textService.saveText(text);
+
+		assertEquals(text, savedText);
+	}
+
+	@Test
+	void shouldThrowExceptionWhenTextIsNull() {
+		assertThrows(IllegalArgumentException.class, () -> textService.saveText(null));
+	}
+
+	@Test
+	void shouldNotSaveExistingText() {
+		Text text = new Text();
+		text.setTextToTranslate("test");
+
+		when(textRepository.findByTextToTranslate(any())).thenReturn(Optional.of(text));
+
+		Text savedText = textService.saveText(text);
+
+		assertEquals(text, savedText);
+	}
+
+	@Test
 	void saveText_nullText() {
 		Text text = null;
 		assertThrows(IllegalArgumentException.class, () -> textService.saveText(text));
