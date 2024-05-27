@@ -1,5 +1,6 @@
 package com.translate.webtranslator.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -23,6 +24,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.translate.webtranslator.cache.CacheKey;
 import com.translate.webtranslator.cache.InMemoryCache;
@@ -63,18 +69,41 @@ class TextServiceTest {
 	}
 
 	@Test
+	void shouldReturnPageOfTextsWhenTextsExist() {
+		int page = 1;
+		int size = 10;
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by("textToTranslate").ascending());
+		Page<Text> expectedPage = new PageImpl<>(List.of(new Text()));
+		when(textRepository.findAllWithPagination(pageable)).thenReturn(expectedPage);
+		Page<Text> actualPage = textService.getTextsWithPagination(page, size);
+		assertThat(actualPage).isEqualTo(expectedPage);
+		verify(textRepository).findAllWithPagination(pageable);
+		verify(textRepository, times(0)).findById(1L);
+		verify(textRepository, times(0)).save(new Text());
+		verify(textRepository, times(0)).deleteById(1L);
+	}
+
+	@Test
+	void shouldReturnEmptyPageWhenTextsDoNotExist() {
+		int page = 1;
+		int size = 10;
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by("textToTranslate").ascending());
+		when(textRepository.findAllWithPagination(pageable)).thenReturn(Page.empty());
+		Page<Text> actualPage = textService.getTextsWithPagination(page, size);
+		assertThat(actualPage).isEmpty();
+		verify(textRepository).findAllWithPagination(pageable);
+		verify(textRepository, times(0)).findById(1L);
+		verify(textRepository, times(0)).save(new Text());
+		verify(textRepository, times(0)).deleteById(1L);
+	}
+
+	@Test
 	void saveText_existingText() {
-		// Given
 		Text text = new Text();
 		text.setTextToTranslate("Hello world");
 		Optional<Text> existingText = Optional.of(text);
-
 		when(textRepository.findByTextToTranslate(text.getTextToTranslate())).thenReturn(existingText);
-
-		// When
 		Text savedText = textService.saveText(text);
-
-		// Then
 		verify(textRepository, never()).save(text);
 		verifyNoInteractions(textCache);
 		assertEquals(text, savedText);
@@ -82,13 +111,8 @@ class TextServiceTest {
 
 	@Test
 	void saveText_nullText() {
-		// Given
 		Text text = null;
-
-		// When
 		assertThrows(IllegalArgumentException.class, () -> textService.saveText(text));
-
-		// Then
 		verifyNoInteractions(textRepository);
 		verifyNoInteractions(textCache);
 	}

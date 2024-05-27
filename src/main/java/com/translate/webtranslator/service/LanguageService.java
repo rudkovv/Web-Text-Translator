@@ -30,7 +30,7 @@ public class LanguageService {
     public LanguageService(LanguageRepository languageRepository, TextRepository textRepository) {
         this.languageRepository = languageRepository;
         this.textRepository = textRepository;
-        this.languageCache = new InMemoryCache();
+        this.setLanguageCache(new InMemoryCache());
     }
 
     
@@ -38,7 +38,7 @@ public class LanguageService {
 			InMemoryCache languageCache) {
 		this.languageRepository =  languageRepository;
 		this.textRepository = textRepository;
-		this.languageCache = languageCache;
+		this.setLanguageCache(languageCache);
 	}
 
     @RequestCounterAnnotation
@@ -55,13 +55,13 @@ public class LanguageService {
      */
     @RequestCounterAnnotation
     public Language getLanguageById(Long languageId) {
-        Language cachedLanguage = (Language) languageCache.get(new CacheKey(languageId));
+        Language cachedLanguage = (Language) getLanguageCache().get(new CacheKey(languageId));
         if (cachedLanguage != null) {
             return cachedLanguage;
         }
         Language language = languageRepository.findById(languageId).orElse(null);
         if (language != null) {
-        	languageCache.put(new CacheKey(languageId), language);
+        	getLanguageCache().put(new CacheKey(languageId), language);
         }
         return language;
     }
@@ -77,7 +77,7 @@ public class LanguageService {
     public Language getLanguageByLanguage(String language) {
     	Language findLanguage = languageRepository.findByName(language);
         if (findLanguage != null) {
-        	languageCache.put(new CacheKey(language), findLanguage);
+        	getLanguageCache().put(new CacheKey(language), findLanguage);
         }
         return findLanguage;
     }
@@ -118,7 +118,7 @@ public class LanguageService {
     		textRepository.save(text);
     	}
         languageRepository.deleteById(languageId);
-        languageCache.remove(new CacheKey(language.getName()));
+        getLanguageCache().remove(new CacheKey(language.getName()));
         return "succes";
     }
     
@@ -142,7 +142,7 @@ public class LanguageService {
     	    text.getLanguages().add(language);
     	    textRepository.save(text);
     	}
-    	languageCache.put(new CacheKey(language.getName()), language);
+    	getLanguageCache().put(new CacheKey(language.getName()), language);
         return language;
     }
     
@@ -163,18 +163,28 @@ public class LanguageService {
         if (text.getLanguages().remove(language)) {
             textRepository.save(text);
         }
-        languageCache.put(new CacheKey(language.getName()), language);
+        getLanguageCache().put(new CacheKey(language.getName()), language);
         return languageRepository.findById(languageId).orElse(null);
     }
     
     @RequestCounterAnnotation
     public List<String> bulkSaveLanguage(List<Language> languages) {
     	languageRepository.saveAll(languages);
-        languages.forEach(language -> languageCache
+        languages.forEach(language -> getLanguageCache()
         		.put(new CacheKey(language.getId()), language));
         return languages.stream()
                 .map(Language::getName)
                 .map(name -> name + " - created")
                 .toList();
     }
+
+
+	public InMemoryCache getLanguageCache() {
+		return languageCache;
+	}
+
+
+	public void setLanguageCache(InMemoryCache languageCache) {
+		this.languageCache = languageCache;
+	}
 }

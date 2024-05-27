@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +21,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.translate.webtranslator.cache.CacheKey;
 import com.translate.webtranslator.cache.InMemoryCache;
@@ -56,6 +62,35 @@ class TranslationServiceTest {
 	void testConstructorInjection() {
 		translationService = new TranslationService(translationRepository, textRepository);
 		assertNotNull(translationService);
+	}
+
+	@Test
+	void shouldReturnPageOfTranslationsWhenTranslationsExist() {
+		int page = 1;
+		int size = 10;
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by("translatedText").ascending());
+		Page<Translation> expectedPage = new PageImpl<>(List.of(new Translation()));
+		when(translationRepository.findAllTranslatiosWithPagination(pageable)).thenReturn(expectedPage);
+		Page<Translation> actualPage = translationService.getTranslationsWithPagination(page, size);
+		assertThat(actualPage).isEqualTo(expectedPage);
+		verify(translationRepository).findAllTranslatiosWithPagination(pageable);
+		verify(translationRepository, times(0)).findById(1L);
+		verify(translationRepository, times(0)).save(new Translation());
+		verify(translationRepository, times(0)).deleteById(1L);
+	}
+
+	@Test
+	void shouldReturnEmptyPageWhenTranslationsDoNotExist() {
+		int page = 1;
+		int size = 10;
+		Pageable pageable = PageRequest.of(page - 1, size, Sort.by("translatedText").ascending());
+		when(translationRepository.findAllTranslatiosWithPagination(pageable)).thenReturn(Page.empty());
+		Page<Translation> actualPage = translationService.getTranslationsWithPagination(page, size);
+		assertThat(actualPage).isEmpty();
+		verify(translationRepository).findAllTranslatiosWithPagination(pageable);
+		verify(translationRepository, times(0)).findById(1L);
+		verify(translationRepository, times(0)).save(new Translation());
+		verify(translationRepository, times(0)).deleteById(1L);
 	}
 
 	@Test

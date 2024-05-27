@@ -109,6 +109,7 @@ class LanguageServiceTest {
         assertEquals(uncachedLanguage, language);
         verify(languageRepository, times(1)).findByName("English");
     }
+    
     @Test
     void testDeleteLanguageThrowsExceptionWhenLanguageNotFound() {
         Long languageId = 1L;
